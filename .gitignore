@@ -1,0 +1,22 @@
+# ── Build artifacts ─────────────────────────────────────────────
+/target/
+**/*.rlib
+**/*.rmeta
+
+# ── Cargo.lock ──────────────────────────────────────────────────
+/Cargo.lock
+
+# ── Editor & OS clutter ─────────────────────────────────────────
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*.tmp
+*.bak
+
+# ── Test & coverage artefacts ────────────────────────
+/coverage/
+/htmlcov/
+/.nyc_output/
+*.lcov
