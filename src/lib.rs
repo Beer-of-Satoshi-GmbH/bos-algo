@@ -3,8 +3,10 @@
 use rand::{rng, Rng};
 use rand::seq::SliceRandom;
 
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
-pub enum Tier { A, B, C, D, E, F }
+#[derive(Copy, Clone, Debug, Eq, PartialEq, Hash)]
+pub enum Tier {
+    A, B, C, D, E, F
+}
 
 #[derive(Clone, Debug)]
 pub struct Bottle {
