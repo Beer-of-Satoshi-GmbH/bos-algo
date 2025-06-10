@@ -163,6 +163,13 @@ Feel free to open an issue or pull request, or reach out on any of the above cha
 
 ---
 
+## Upcoming features / ToDos
+
+- [ ] **CI/CD**: Integration
+- [ ] **SIM**: Fetch BTC price from CoinGecko
+- [ ] **UI**: Web UI for distribution simulation
+   
+
 ## License
 
 Licensed under **MIT**
