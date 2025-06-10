@@ -33,7 +33,7 @@ fn rejects_zero_price() {
 
 #[test]
 fn rejects_cap_too_low() {
-    let price = 34_250_52;
+    let price = 96_496_00;
     let min_cap_cents =
         ((F_COUNT as u128) * (MIN_F as u128) * price as u128) / ONE_BTC_SATS;
     let too_low = min_cap_cents as u64 - 1;
@@ -45,7 +45,7 @@ fn rejects_cap_too_low() {
 
 #[test]
 fn unlimited_cap_invariants_hold() {
-    let price = 34_250_52;
+    let price = 96_496_00;
     let dist = generate_distribution(price, 0).unwrap();
     assert_eq!(dist.len(), TOTAL);
     assert!(fixed_counts_ok(&dist));
@@ -56,7 +56,7 @@ fn unlimited_cap_invariants_hold() {
 
 #[test]
 fn cap_respected_exact() {
-    let price = 30_000_00;
+    let price = 96_496_00;
     let cap   = 10_000_00;
     let dist  = generate_distribution(price, cap).unwrap();
 

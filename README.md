@@ -5,13 +5,13 @@
 
 ---
 
-##  What it does
+## What it does
 
-`bos‑algo` builds the **31  500‑bottle reward roster** for the Beer of Satoshi
+`bos‑algo` builds the **31 500‑bottle reward roster** for the Beer of Satoshi
 promotion.
 
-| Tier | Bottles | Satoshi bonus _per_ bottle |
-|------|---------|---------------------------|
+| Tier | Bottles | Satoshi bonus per bottle |
+|------|---------|--------------------------|
 | A    | 1       | 1 000 000 sat |
 | B    | 10      | 100 000 sat   |
 | C    | 100     | 10 000 sat    |
@@ -19,21 +19,21 @@ promotion.
 | E    | 2 000   | 1 000 sat     |
 | F    | 28 389  | **uniform 21 – 500 sat**<br>total never exceeds an optional EUR cap |
 
-Security & fairness guarantees:
+### Security & fairness highlights
 
-* **integer‑only** conversions (no floats)  
-* **cryptographically secure RNG** (`rand 0.9`)  
-* per‑bottle uniform draw that always respects the global cap  
-* final Fisher–Yates shuffle for unpredictable ordering  
-* zero `unsafe` code (`#![forbid(unsafe_code)]`)  
-* property tests (₊ fuzz) covering edge‑cases
+* integer‑only conversions (no floats)
+* cryptographically secure RNG (`rand` 0.9)
+* per‑bottle uniform draw that always respects the global cap
+* Fisher–Yates shuffle for unpredictable ordering
+* zero `unsafe` code (`#![forbid(unsafe_code)]`)
+* property‑based + fuzz tests for edge‑cases
 
 ---
 
-##  Install
+## Install
 
 ```bash
-cargo add bos-algo # or `cargo add --git <repo>`
+cargo add bos-algo       # or `cargo add --git <repo-url>`
 ````
 
 Requires **Rust 1.77 +** (Edition 2024).
@@ -48,8 +48,8 @@ use bos_algo::generate_distribution;
 /*  Example values  (09 Jun 2025):
     1 BTC ≈ €96 496.00  → 9 649 600 cents
     Cap   ≈ €10 000.00  → 1 000 000 cents                               */
-let btc_price_cents = 9_649_600;   // accurate to 0.01 €
-let eur_cap_cents   = 1_000_000;   // €10 000 cap
+let btc_price_cents = 9_649_600;
+let eur_cap_cents   = 1_000_000;
 
 let bottles = generate_distribution(btc_price_cents, eur_cap_cents).unwrap();
 
