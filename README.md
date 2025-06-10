@@ -81,8 +81,7 @@ We provide an example CLI tool (in `src/bin/sim.rs`) that:
 
 * **Generates the distribution** once,
 * **Claims bottles in steps** (e.g., 50 bottles each step, for 5 steps),
-* **Prints a table** with Tier statistics (In Tier, Claimed, Unclaimed, Sats Claimed, etc.),
-* Optionally **fetches the current BTC price** from CoinGecko (if you pass `--price-eur-cents 0`).
+* **Prints a table** with Tier statistics (In Tier, Claimed, Unclaimed, Sats Claimed, etc.)
 
 To run the simulation:
 

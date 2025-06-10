@@ -62,10 +62,8 @@ fn main() {
         tier_stats: &HashMap<Tier, TierStats>,
         price_eur_cents: u64,
     ) {
-        // gather all Tiers in an order we want (A..F)
         let all_tiers = [Tier::A, Tier::B, Tier::C, Tier::D, Tier::E, Tier::F];
 
-        // compute total sats claimed for each tier, total bottles in tier, etc.
         let mut grand_claimed_bottles = 0;
         let mut grand_in_tier = 0;
         let mut grand_sats_claimed: u128 = 0;
@@ -110,7 +108,6 @@ fn main() {
             grand_in_tier - grand_claimed_bottles
         );
 
-        // approximate the EUR value
         let sats_to_eur = price_eur_cents as f64 / 100_000_000.0;
         let total_eur_claimed = grand_sats_claimed as f64 * sats_to_eur;
         println!(
@@ -120,7 +117,6 @@ fn main() {
         );
     }
 
-    // 4) We'll define a function that "claims" N bottles at random from the unclaimed set
     fn claim_bottles(
         session_dist: &mut [Bottle],
         tier_stats: &mut HashMap<Tier, TierStats>,
@@ -150,7 +146,6 @@ fn main() {
         }
     }
 
-    // 5) Perform multiple steps of claiming
     println!("Initial (no bottles claimed yet):");
     print_tier_table(&tier_stats, args.price_eur_cents);
 
