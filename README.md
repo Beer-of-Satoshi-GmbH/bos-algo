@@ -85,16 +85,6 @@ We provide an example CLI tool (in `src/bin/sim.rs`) that:
 
 To run the simulation:
 
-```bash
-cargo run --bin sim -- \
-  --price-eur-cents 9649600 \
-  --cap-eur-cents 0 \
-  --simulate-steps 5 \
-  --claim-step 50
-```
-
-Examples:
-
 1. **No cap**, 5 claiming steps, each claims 50 bottles:
 
    ```bash
