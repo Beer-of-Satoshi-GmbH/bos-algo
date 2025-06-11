@@ -39,7 +39,7 @@ cargo add bos-algo
 ````
 
 *(Or clone the repo and reference it via `cargo add --git <repo‑url>`.)*
-Requires **Rust 1.77+** (Edition 2024).
+Requires **Rust 1.85+** (Edition 2024).
 
 ---
 
