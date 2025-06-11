@@ -1,5 +1,3 @@
-//! CLI demo – generate once, then claim in steps and print tier table.
-
 use clap::Parser;
 use rand::{rng, seq::SliceRandom};
 use serde::Deserialize;
@@ -12,7 +10,7 @@ use bos_algo::{generate_distribution, Bottle, Tier};
 #[command(name = "bos‑sim")]
 #[command(author = "Beer of Satoshi")]
 #[command(version = "0.1")]
-#[command(about = "Step‑wise bottle claiming simulation")]
+#[command(about = "Step‑wise bottle‑claim simulation")]
 struct Args {
     #[arg(long, default_value = "0")]
     price_eur_cents: u64,
@@ -63,26 +61,21 @@ fn main() {
 
     let dist = match generate_distribution(args.price_eur_cents, args.cap_eur_cents) {
         Ok(d)  => d,
-        Err(e) => {
-            eprintln!("Generation error: {e:?}");
-            return;
-        }
+        Err(e) => { eprintln!("Generation error: {e:?}"); return; }
     };
     println!("Distribution generated: {} bottles\n", dist.len());
 
-    let mut session_dist: Vec<Bottle> = dist
-        .into_iter()
-        .map(|b| Bottle { claimed: false, ..b })
-        .collect();
+    let mut session_dist: Vec<Bottle> =
+        dist.into_iter().map(|b| Bottle { claimed: false, ..b }).collect();
 
     let mut stats: HashMap<Tier, TierStats> = HashMap::new();
-    for bottle in &session_dist {
-        stats.entry(bottle.tier).or_default().in_tier += 1;
+    for b in &session_dist {
+        stats.entry(b.tier).or_default().in_tier += 1;
     }
 
     let mut rng = rng();
 
-    fn print_table(stats: &HashMap<Tier, TierStats>, price_eur_cents: u64) {
+    fn print_table(stats: &HashMap<Tier, TierStats>, price: u64) {
         const TIERS: [Tier; 6] = [Tier::A, Tier::B, Tier::C, Tier::D, Tier::E, Tier::F];
 
         let mut total_in = 0u32;
@@ -103,7 +96,7 @@ fn main() {
                 let label = match t {
                     Tier::A=>"Tier A (1M)",   Tier::B=>"Tier B (100k)",
                     Tier::C=>"Tier C (10k)",  Tier::D=>"Tier D (2 100)",
-                    Tier::E=>"Tier E (1 000)",Tier::F=>"Tier F (21–500 cap)",
+                    Tier::E=>"Tier E (1 000)",Tier::F=>"Tier F (21–500)",
                 };
                 println!("{:25} | {:>7} | {:>7} | {:>9} | {:>13}",
                          label, st.in_tier, st.claimed, un, st.sats_claimed);
@@ -111,14 +104,14 @@ fn main() {
         }
 
         let remaining = total_in - total_cl;
-        let eur = sats_sum as f64 * (price_eur_cents as f64 / 100_000_000.0);
+        let eur = sats_sum as f64 * (price as f64 / 100_000_000.0);
 
         println!("\nTotal bottles: {total_in}   Claimed: {total_cl}   Remaining: {remaining}");
         println!("Total sats claimed: {sats_sum} ≈ {:.2} €\n", eur);
     }
 
     fn claim_n(
-        how_many: usize,
+        n: usize,
         dist: &mut [Bottle],
         stats: &mut HashMap<Tier, TierStats>,
         rng: &mut impl rand::Rng,
@@ -130,8 +123,7 @@ fn main() {
             .collect();
 
         unclaimed.shuffle(rng);
-        let pick = how_many.min(unclaimed.len());
-        for &idx in &unclaimed[..pick] {
+        for &idx in &unclaimed[..n.min(unclaimed.len())] {
             let b = &mut dist[idx];
             b.claimed = true;
             let s = stats.get_mut(&b.tier).unwrap();
@@ -145,8 +137,7 @@ fn main() {
 
     for step in 1..=args.simulate_steps {
         claim_n(args.claim_step, &mut session_dist, &mut stats, &mut rng);
-        println!("After claiming {} bottles (step {step}/{})",
-            args.claim_step, args.simulate_steps);
+        println!("After claiming {} bottles (step {step}/{})", args.claim_step, args.simulate_steps);
         print_table(&stats, args.price_eur_cents);
     }
 }

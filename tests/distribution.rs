@@ -1,15 +1,14 @@
 use bos_algo::{generate_distribution, Tier};
 use proptest::prelude::*;
 
-const TOTAL: usize = 31_500;
+const TOTAL:   usize = 31_500;
 const F_COUNT: usize = 28_389;
 const MIN_F: u32 = 21;
 const MAX_F: u32 = 500;
 const ONE_BTC_SATS: u32 = 100_000_000;
 
 fn fixed_counts_ok(dist: &[bos_algo::Bottle]) -> bool {
-    let mut a = 0; let mut b = 0; let mut c = 0;
-    let mut d = 0; let mut e = 0; let mut f = 0;
+    let (mut a, mut b, mut c, mut d, mut e, mut f) = (0, 0, 0, 0, 0, 0);
     for btl in dist {
         match btl.tier {
             Tier::A => a += 1,
@@ -33,7 +32,7 @@ fn rejects_zero_price() {
 
 #[test]
 fn rejects_cap_too_low() {
-    let price = 9_649_600u64;
+    let price = 9_649_600u64;          // 96 496.00 €
     let min_cap_cents =
         (F_COUNT as u128 * MIN_F as u128 * price as u128) / ONE_BTC_SATS as u128;
     let too_low = min_cap_cents as u64 - 1;
@@ -57,7 +56,7 @@ fn unlimited_cap_invariants_hold() {
 #[test]
 fn cap_respected_exact() {
     let price = 9_649_600u64;
-    let cap   = 1_000_000u64;
+    let cap   = 1_000_000u64;          // 10 000 €
     let dist  = generate_distribution(price, cap).unwrap();
 
     let total_f_sats: u128 = dist.iter()
@@ -65,15 +64,15 @@ fn cap_respected_exact() {
         .map(|b| b.sats as u128)
         .sum();
 
-    let total_eur_cents = total_f_sats * price as u128 / ONE_BTC_SATS as u128;
-    assert!(total_eur_cents <= cap as u128);
+    let eur_cents = total_f_sats * price as u128 / ONE_BTC_SATS as u128;
+    assert!(eur_cents <= cap as u128);
 }
 
 proptest! {
     #[test]
     fn prop_invariants(
-        price in 1u64..=20_000_000, // 20 000 000 c  (= 200 000 €)
-        spare in 0u64..=2_000_000  //  2 000 000 c  (= 20 000 € spare head‑room)
+        price in 1u64..=20_000_000,   // up to 200 000 €
+        spare in 0u64..=2_000_000     // additional cap head‑room
     ) {
         let min_cap_cents =
             (F_COUNT as u128 * MIN_F as u128 * price as u128) / ONE_BTC_SATS as u128;
