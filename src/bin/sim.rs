@@ -1,18 +1,22 @@
+#![forbid(unsafe_code)]
+#![warn(clippy::all, clippy::pedantic)]
+
 use clap::Parser;
 use rand::{rng, seq::SliceRandom};
-use serde::Deserialize;
-use reqwest::blocking;
 use std::collections::HashMap;
 
-use bos_algo::{generate_distribution, Bottle, Tier};
+use bos_algo::{Bottle, Tier, generate_distribution};
 
 #[derive(Parser, Debug)]
-#[command(name = "bos‑sim")]
+#[command(name = "BOS Extended Simulation")]
 #[command(author = "Beer of Satoshi")]
-#[command(version = "0.1")]
-#[command(about = "Step‑wise bottle‑claim simulation")]
-struct Args {
-    #[arg(long, default_value = "0")]
+#[command(version = "1.0")]
+#[command(
+    about = "Generate the 31 500‑bottle distribution and step‑claim bottles, \
+             tracking tier statistics."
+)]
+struct Cli {
+    #[arg(long, default_value = "9649600")]
     price_eur_cents: u64,
 
     #[arg(long, default_value = "0")]
@@ -25,119 +29,114 @@ struct Args {
     claim_step: usize,
 }
 
-#[derive(Deserialize)]
-struct Gecko { bitcoin: Price }
-#[derive(Deserialize)]
-struct Price  { eur: f64 }
-
-fn fetch_btc_price_eur_cents() -> Result<u64, Box<dyn std::error::Error>> {
-    let url = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=eur";
-    let g: Gecko = blocking::get(url)?.json()?;
-    Ok((g.bitcoin.eur * 100.0).round() as u64)
-}
-
 #[derive(Default)]
 struct TierStats {
-    in_tier:      u16,
-    claimed:      u16,
-    sats_claimed: u64,
+    in_tier: usize,
+    claimed: usize,
+    sats_claimed: u128,
 }
 
 fn main() {
-    let mut args = Args::parse();
+    let args = Cli::parse();
 
-    if args.price_eur_cents == 0 {
-        match fetch_btc_price_eur_cents() {
-            Ok(p) => {
-                println!("Fetched BTC price: {:.2} €", p as f64 / 100.0);
-                args.price_eur_cents = p;
-            }
-            Err(e) => {
-                eprintln!("Price fetch failed: {e}. Using 9 649 600 c.");
-                args.price_eur_cents = 9_649_600;
-            }
-        }
-    }
+    let dist =
+        generate_distribution(args.price_eur_cents, args.cap_eur_cents).unwrap_or_else(|e| {
+            eprintln!("Error generating distribution: {e:?}");
+            std::process::exit(1);
+        });
 
-    let dist = match generate_distribution(args.price_eur_cents, args.cap_eur_cents) {
-        Ok(d)  => d,
-        Err(e) => { eprintln!("Generation error: {e:?}"); return; }
-    };
-    println!("Distribution generated: {} bottles\n", dist.len());
+    println!("Generated distribution of {} bottles.\n", dist.len());
 
-    let mut session_dist: Vec<Bottle> =
-        dist.into_iter().map(|b| Bottle { claimed: false, ..b }).collect();
+    let mut session_dist: Vec<Bottle> = dist
+        .into_iter()
+        .map(|b| Bottle {
+            claimed: false,
+            ..b
+        })
+        .collect();
 
-    let mut stats: HashMap<Tier, TierStats> = HashMap::new();
+    let mut tier_stats: HashMap<Tier, TierStats> = HashMap::new();
     for b in &session_dist {
-        stats.entry(b.tier).or_default().in_tier += 1;
+        tier_stats.entry(b.tier).or_default().in_tier += 1;
     }
 
-    let mut rng = rng();
-
-    fn print_table(stats: &HashMap<Tier, TierStats>, price: u64) {
-        const TIERS: [Tier; 6] = [Tier::A, Tier::B, Tier::C, Tier::D, Tier::E, Tier::F];
-
-        let mut total_in = 0u32;
-        let mut total_cl = 0u32;
-        let mut sats_sum = 0u64;
-
-        println!("{:25} | {:>7} | {:>7} | {:>9} | {:>13}",
-                 "Tier", "In Tier", "Claimed", "Unclaimed", "Sats Claimed");
-        println!("{:-<81}", "-");
-
-        for &t in &TIERS {
-            if let Some(st) = stats.get(&t) {
-                let un = st.in_tier - st.claimed;
-                total_in += st.in_tier as u32;
-                total_cl += st.claimed as u32;
-                sats_sum += st.sats_claimed;
-
-                let label = match t {
-                    Tier::A=>"Tier A (1M)",   Tier::B=>"Tier B (100k)",
-                    Tier::C=>"Tier C (10k)",  Tier::D=>"Tier D (2 100)",
-                    Tier::E=>"Tier E (1 000)",Tier::F=>"Tier F (21–500)",
-                };
-                println!("{:25} | {:>7} | {:>7} | {:>9} | {:>13}",
-                         label, st.in_tier, st.claimed, un, st.sats_claimed);
-            }
-        }
-
-        let remaining = total_in - total_cl;
-        let eur = sats_sum as f64 * (price as f64 / 100_000_000.0);
-
-        println!("\nTotal bottles: {total_in}   Claimed: {total_cl}   Remaining: {remaining}");
-        println!("Total sats claimed: {sats_sum} ≈ {:.2} €\n", eur);
-    }
-
-    fn claim_n(
-        n: usize,
-        dist: &mut [Bottle],
-        stats: &mut HashMap<Tier, TierStats>,
-        rng: &mut impl rand::Rng,
-    ) {
-        let mut unclaimed: Vec<usize> = dist.iter()
-            .enumerate()
-            .filter(|(_, b)| !b.claimed)
-            .map(|(i, _)| i)
-            .collect();
-
-        unclaimed.shuffle(rng);
-        for &idx in &unclaimed[..n.min(unclaimed.len())] {
-            let b = &mut dist[idx];
-            b.claimed = true;
-            let s = stats.get_mut(&b.tier).unwrap();
-            s.claimed      += 1;
-            s.sats_claimed += b.sats as u64;
-        }
-    }
-
-    println!("Initial state:");
-    print_table(&stats, args.price_eur_cents);
+    print_tier_table(
+        &tier_stats,
+        args.price_eur_cents,
+        "Initial (no bottles claimed yet)",
+    );
 
     for step in 1..=args.simulate_steps {
-        claim_n(args.claim_step, &mut session_dist, &mut stats, &mut rng);
-        println!("After claiming {} bottles (step {step}/{})", args.claim_step, args.simulate_steps);
-        print_table(&stats, args.price_eur_cents);
+        claim_bottles(&mut session_dist, &mut tier_stats, args.claim_step);
+        let caption = format!("After claiming {} bottles in step {step}", args.claim_step);
+        print_tier_table(&tier_stats, args.price_eur_cents, &caption);
+    }
+}
+
+fn print_tier_table(stats: &HashMap<Tier, TierStats>, price_cents: u64, header: &str) {
+    println!("\n{header}");
+    println!(
+        "{:25} | {:>7} | {:>7} | {:>9} | {:>12}",
+        "Tier", "In", "Claimed", "Unclaimed", "Sat‑Claimed"
+    );
+    println!("{:-<78}", "-");
+
+    let labels = [
+        (Tier::A, "Tier A (1 000 000 sat)"),
+        (Tier::B, "Tier B (100 000 sat)"),
+        (Tier::C, "Tier C (10 000 sat)"),
+        (Tier::D, "Tier D (2 100 sat)"),
+        (Tier::E, "Tier E (1 000 sat)"),
+        (Tier::F, "Tier F (21‑500 sat)"),
+    ];
+
+    let mut total_bottles = 0;
+    let mut total_claimed = 0;
+    let mut sats_total: u128 = 0;
+
+    for (tier, label) in labels {
+        if let Some(s) = stats.get(&tier) {
+            let unclaimed = s.in_tier - s.claimed;
+            total_bottles += s.in_tier;
+            total_claimed += s.claimed;
+            sats_total += s.sats_claimed;
+
+            println!(
+                "{:25} | {:>7} | {:>7} | {:>9} | {:>12}",
+                label, s.in_tier, s.claimed, unclaimed, s.sats_claimed
+            );
+        }
+    }
+
+    let eur_total_cents: u128 = sats_total * u128::from(price_cents) / 100_000_000u128;
+
+    println!(
+        "\nTotals → bottles: {total_bottles}, claimed: {total_claimed}, remaining: {}",
+        total_bottles - total_claimed
+    );
+
+    let euros = eur_total_cents / 100;
+    let cents = eur_total_cents % 100;
+    println!("Total sats claimed: {sats_total} ≈ €{euros}.{cents:02}");
+}
+
+fn claim_bottles(dist: &mut [Bottle], stats: &mut HashMap<Tier, TierStats>, how_many: usize) {
+    let mut indices: Vec<_> = dist
+        .iter()
+        .enumerate()
+        .filter_map(|(i, b)| (!b.claimed).then_some(i))
+        .collect();
+
+    let mut rng_local = rng();
+    indices.shuffle(&mut rng_local);
+
+    for &idx in indices.iter().take(how_many) {
+        let bottle = &mut dist[idx];
+        if !bottle.claimed {
+            bottle.claimed = true;
+            let entry = stats.get_mut(&bottle.tier).expect("tier present");
+            entry.claimed += 1;
+            entry.sats_claimed += u128::from(bottle.sats);
+        }
     }
 }
