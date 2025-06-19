@@ -105,7 +105,7 @@ pub fn generate_distribution(
 
         let feasible_max: u32 = u32::try_from(feasible_max_u128).unwrap_or(MAX_F);
 
-        let val = rng.random_range(MIN_F..=feasible_max);
+        let val = rng.gen_range(MIN_F..=feasible_max);
 
         dist.push(Bottle {
             tier: Tier::F,
