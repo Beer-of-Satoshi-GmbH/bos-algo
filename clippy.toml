@@ -1,0 +1,77 @@
+# Clippy configuration
+# Run with: cargo clippy -- -D warnings
+
+# Maximum cognitive complexity of a function
+cognitive-complexity-threshold = 30
+
+# Maximum number of lines in a function
+too-many-lines-threshold = 100
+
+# Maximum number of arguments in a function
+too-many-arguments-threshold = 7
+
+# Maximum single literal integer
+literal-representation-threshold = 16
+
+# Maximum type complexity
+type-complexity-threshold = 250
+
+# Maximum number of enum variants
+enum-variant-name-threshold = 3
+
+# Maximum cyclomatic complexity
+cyclomatic-complexity-threshold = 25
+
+# Warn on TODOs
+warn-on-all-wildcard-imports = true
+
+# Disallowed names
+disallowed-names = ["foo", "bar", "baz", "quux"]
+
+# Documentation coverage
+missing-docs-in-crate-items = true
+
+# MSRV (Minimum Supported Rust Version)
+msrv = "1.77.0"
+
+# Enforce documentation on private items
+missing-docs-in-private-items = false
+
+# Allow certain macros
+allowed-duplicate-crates = []
+
+# Standard lint categories to allow
+allow-dbg-in-tests = true
+
+# Maximum inline array length
+array-size-threshold = 512
+
+# Avoid breaking exported API
+avoid-breaking-exported-api = true
+
+# Maximum size of futures
+future-size-threshold = 16384
+
+# Stack size threshold for large stack arrays
+large-stack-arrays-threshold = 512000
+
+# Maximum includes in a single file
+max-include-file-size = 1000000
+
+# Pass by value size limit
+pass-by-value-size-limit = 256
+
+# Single char binding names to allow
+single-char-binding-names-threshold = 4
+
+# Struct field name threshold
+struct-excessive-bools-threshold = 3
+
+# Threshold for too many lines
+too-many-lines-threshold = 100
+
+# Upper case acronyms - set to false to require Camel Case
+upper-case-acronyms-aggressive = false
+
+# Vec box size threshold
+vec-box-size-threshold = 4096

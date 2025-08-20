@@ -1,0 +1,102 @@
+# Rust formatting configuration
+# Run with: cargo fmt
+
+# Use verbose diffs
+verbose = true
+
+# Maximum line width
+max_width = 100
+
+# Hard tabs vs spaces
+hard_tabs = false
+
+# Number of spaces per tab
+tab_spaces = 4
+
+# Newline style (Auto, Windows, Unix, Native)
+newline_style = "Unix"
+
+# Use small heuristics for formatting
+use_small_heuristics = "Default"
+
+# Indent style for parameters
+indent_style = "Block"
+
+# Put function arguments on separate lines if they're too long
+fn_args_layout = "Tall"
+
+# Chain indentation
+chain_width = 60
+single_line_if_else_max_width = 50
+
+# Merge multiple imports from same module
+merge_imports = true
+
+# Remove nested parens
+remove_nested_parens = true
+
+# Reorder imports and modules
+reorder_imports = true
+reorder_modules = true
+
+# Use field initialize shorthand
+use_field_init_shorthand = true
+
+# Use try shorthand (? operator)
+use_try_shorthand = true
+
+# Format strings
+format_strings = false
+
+# Format macro matchers
+format_macro_matchers = true
+
+# Format macro bodies
+format_macro_bodies = true
+
+# Format doc comments
+format_code_in_doc_comments = true
+
+# Normalize comments
+normalize_comments = true
+
+# Wrap comments
+wrap_comments = true
+
+# Comment width
+comment_width = 80
+
+# Blank lines
+blank_lines_upper_bound = 1
+blank_lines_lower_bound = 0
+
+# Edition
+edition = "2024"
+
+# Merge derives
+merge_derives = true
+
+# Trailing comma
+trailing_comma = "Vertical"
+
+# Match block trailing comma
+match_block_trailing_comma = false
+
+# Force multiline blocks
+force_multiline_blocks = false
+
+# Normalize doc attributes
+normalize_doc_attributes = true
+
+# Report formatting errors as warnings
+report_todo = "Always"
+report_fixme = "Always"
+
+# Skip formatting generated files
+skip_children = false
+
+# Emit mode
+emit_mode = "Files"
+
+# Make backup before formatting
+make_backup = false
