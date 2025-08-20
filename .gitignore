@@ -16,6 +16,7 @@
 *.bak
 
 # ── Test & coverage artefacts ────────────────────────
+/artifacts/
 /coverage/
 /htmlcov/
 /.nyc_output/
