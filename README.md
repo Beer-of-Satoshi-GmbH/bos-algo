@@ -161,9 +161,40 @@ pub fn generate_distribution(
 Feel free to open an issue or pull request, or reach out on any of the above channels for questions, audits, or integration help.
 ---
 
+## Development
+
+### Quick Start with Make
+
+```bash
+make help         # Show all available commands
+make test         # Run all tests
+make bench        # Run benchmarks
+make coverage     # Generate coverage report
+make audit        # Security audit
+make all          # Run fmt, lint, test, and audit
+```
+
+### CI/CD
+
+This project uses GitHub Actions for continuous integration:
+- Multi-platform testing (Linux, macOS, Windows)
+- Multiple Rust versions (stable, beta, nightly, MSRV)
+- Security auditing with cargo-audit
+- Code coverage with codecov
+- Automated dependency updates with Dependabot
+- Fuzz testing and benchmarking
+
+### Security
+
+See [SECURITY.md](SECURITY.md) for our security policy and how to report vulnerabilities.
+
+### Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
+
 ## Upcoming features / ToDos
 
-- [ ] **CI/CD**: Integration
+- [x] **CI/CD**: GitHub Actions integration
 - [ ] **SIM**: Fetch BTC price from CoinGecko
 - [ ] **UI**: Web UI for distribution simulation
 
