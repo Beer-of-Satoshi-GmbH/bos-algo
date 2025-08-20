@@ -1,0 +1,26 @@
+[package]
+name = "bos-algo-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2024"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+
+[dependencies.bos-algo]
+path = ".."
+
+[[bin]]
+name = "fuzz_distribution"
+path = "fuzz_targets/fuzz_distribution.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_edge_cases"
+path = "fuzz_targets/fuzz_edge_cases.rs"
+test = false
+doc = false
