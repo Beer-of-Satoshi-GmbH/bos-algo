@@ -71,7 +71,7 @@ blank_lines_upper_bound = 1
 blank_lines_lower_bound = 0
 
 # Edition
-edition = "2024"
+edition = "2021"
 
 # Merge derives
 merge_derives = true
