@@ -2,7 +2,7 @@
 #![warn(clippy::all, clippy::pedantic)]
 
 use rand::seq::SliceRandom;
-use rand::{Rng, rng};
+use rand::{thread_rng, Rng};
 use std::convert::TryFrom;
 
 #[repr(u8)]
@@ -75,7 +75,7 @@ pub fn generate_distribution(
 
     let tier_f_count: u32 =
         u32::try_from(TOTAL_BOTTLES - dist.len()).expect("≤ 31 500 fits in u32");
-    let mut rng = rng();
+    let mut rng = thread_rng();
 
     if tier_f_count == 0 {
         dist.shuffle(&mut rng);

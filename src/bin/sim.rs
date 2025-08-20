@@ -2,7 +2,7 @@
 #![warn(clippy::all, clippy::pedantic)]
 
 use clap::Parser;
-use rand::{rng, seq::SliceRandom};
+use rand::{thread_rng, seq::SliceRandom};
 use std::collections::HashMap;
 
 use bos_algo::{Bottle, Tier, generate_distribution};
@@ -127,7 +127,7 @@ fn claim_bottles(dist: &mut [Bottle], stats: &mut HashMap<Tier, TierStats>, how_
         .filter_map(|(i, b)| (!b.claimed).then_some(i))
         .collect();
 
-    let mut rng_local = rng();
+    let mut rng_local = thread_rng();
     indices.shuffle(&mut rng_local);
 
     for &idx in indices.iter().take(how_many) {

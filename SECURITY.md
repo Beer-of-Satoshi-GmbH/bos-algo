@@ -61,7 +61,7 @@ When using `bos-algo`:
 `bos-algo` implements several security measures:
 
 - ✅ **No unsafe code**: `#![forbid(unsafe_code)]`
-- ✅ **Cryptographically secure RNG**: Uses `rand::rng()` (CSPRNG)
+- ✅ **Cryptographically secure RNG**: Uses `rand::thread_rng()` (CSPRNG)
 - ✅ **Integer-only arithmetic**: Prevents floating-point vulnerabilities
 - ✅ **Input validation**: All inputs are validated before processing
 - ✅ **Memory safety**: Guaranteed by Rust's ownership system

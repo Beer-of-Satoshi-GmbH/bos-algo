@@ -142,7 +142,7 @@ pub fn generate_distribution(
 | Item                      | Status                 |
 |---------------------------|------------------------|
 | Money handled as integers | ✅                      |
-| RNG source                | `rand::rng()` (CSPRNG) |
+| RNG source                | `rand::thread_rng()` (CSPRNG) |
 | `unsafe` code             | **None**               |
 | Fuzz / property tests     | ✅ (`proptest`)         |
 | MSRV                      | 1.77                   |

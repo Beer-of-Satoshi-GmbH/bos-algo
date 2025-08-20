@@ -47,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Enforced `#![forbid(unsafe_code)]` for memory safety
 - Input validation for all parameters
-- Secure random number generation using rand::rng() (CSPRNG)
+- Secure random number generation using rand::thread_rng() (CSPRNG)
 
 [Unreleased]: https://github.com/Beer-of-Satoshi-GmbH/bos-algo/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/Beer-of-Satoshi-GmbH/bos-algo/releases/tag/v0.1.0
