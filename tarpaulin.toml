@@ -1,0 +1,46 @@
+# Tarpaulin configuration for code coverage
+# Run with: cargo tarpaulin
+
+[default]
+# Source files to cover
+include = ["src/**/*.rs"]
+
+# Files to exclude from coverage
+exclude = [
+    "src/bin/**",
+    "tests/**",
+    "benches/**"
+]
+
+# Workspace handling
+workspace = true
+
+# Output formats
+output = ["Html", "Lcov", "Json"]
+
+# Coverage output directory
+output-dir = "./coverage"
+
+# Run tests with all features
+all-features = true
+
+# Timeout per test in seconds
+timeout = 120
+
+# Follow executed binaries
+follow-exec = true
+
+# Skip clean build
+skip-clean = false
+
+# Verbose output
+verbose = false
+
+# Line coverage
+line = true
+
+# Branch coverage
+branch = true
+
+# Number of parallel jobs
+jobs = 4

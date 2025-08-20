@@ -1,0 +1,31 @@
+# cargo-audit configuration
+
+[advisories]
+# Ignore specific advisory IDs during auditing
+ignore = []
+
+# Warn for unmaintained crates
+unmaintained = "warn"
+
+# Warn instead of error for vulnerabilities with CVSS score less than
+vulnerability_threshold = 7.0
+
+[database]
+# Fetch the advisory database
+fetch = true
+
+# Use a specific advisory database URL
+# url = "https://github.com/RustSec/advisory-db"
+
+[output]
+# Output format: "terminal" or "json"
+format = "terminal"
+
+# Deny warnings (exit with error if any warnings are found)
+deny_warnings = false
+
+[packages]
+# Package-specific configuration
+# Example:
+# [packages.example_crate]
+# ignore = ["RUSTSEC-2020-0001"]

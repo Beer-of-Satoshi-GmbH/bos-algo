@@ -1,7 +1,7 @@
 [package]
 name          = "bos-algo"
 version       = "0.1.0"
-edition       = "2024"
+edition       = "2021"
 license       = "MIT"
 repository    = "https://github.com/Beer-of-Satoshi-GmbH/bos-algo"
 readme        = "README.md"
@@ -9,8 +9,13 @@ keywords      = ["bitcoin", "satoshi", "random", "promotion"]
 categories    = ["algorithms", "finance"]
 
 [dependencies]
-rand = "0.9.1"
-clap = { version = "4.5", features = ["derive"] }
+rand = "0.8.5"
+clap = { version = "4.5.45", features = ["derive"] }
 
 [dev-dependencies]
-proptest = { version = "1.4", default-features = false, features = ["std"] }
+proptest = { version = "1.5.0", default-features = false, features = ["std"] }
+criterion = "0.5.1"
+
+[[bench]]
+name = "distribution"
+harness = false

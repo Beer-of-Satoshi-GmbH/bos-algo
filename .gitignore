@@ -4,7 +4,9 @@
 **/*.rmeta
 
 # ── Cargo.lock ──────────────────────────────────────────────────
-/Cargo.lock
+# Note: Cargo.lock is tracked for binary crates (contains bin/)
+# Uncomment the line below if this becomes a library-only crate
+# /Cargo.lock
 
 # ── Editor & OS clutter ─────────────────────────────────────────
 .DS_Store
@@ -16,6 +18,7 @@
 *.bak
 
 # ── Test & coverage artefacts ────────────────────────
+/artifacts/
 /coverage/
 /htmlcov/
 /.nyc_output/
