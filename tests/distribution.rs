@@ -1,8 +1,8 @@
-use bos_algo::{Bottle, Tier, generate_distribution};
+use bos_algo::{generate_distribution, Bottle, Tier, TOTAL_BOTTLES};
 use proptest::prelude::*;
 
-const TOTAL: usize = 31_500;
-const F_COUNT: usize = 28_389;
+const TOTAL: usize = TOTAL_BOTTLES;
+const F_COUNT: usize = TOTAL_BOTTLES - 3111;
 const MIN_F: u32 = 21;
 const MAX_F: u32 = 500;
 const ONE_BTC_SATS: u128 = 100_000_000;
@@ -40,11 +40,10 @@ fn unlimited_cap_invariants_hold() {
     let dist = generate_distribution(price, 0).unwrap();
     assert_eq!(dist.len(), TOTAL);
     assert!(fixed_counts_ok(&dist));
-    assert!(
-        dist.iter()
-            .filter(|b| b.tier == Tier::F)
-            .all(|b| (MIN_F..=MAX_F).contains(&b.sats))
-    );
+    assert!(dist
+        .iter()
+        .filter(|b| b.tier == Tier::F)
+        .all(|b| (MIN_F..=MAX_F).contains(&b.sats)));
 }
 
 #[test]

@@ -2,7 +2,7 @@
 # Run with: cargo fmt
 
 # Use verbose diffs
-verbose = true
+verbose = "Verbose"
 
 # Maximum line width
 max_width = 100

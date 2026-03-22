@@ -6,7 +6,7 @@
 
 ## What it does
 
-`bos‑algo` builds the **31,500‑bottle reward roster** for the Beer of Satoshi promotion.
+`bos‑algo` builds the **27,140‑bottle reward roster** for the Beer of Satoshi promotion.
 
 | Tier | Bottles | Satoshi bonus per bottle                                            |
 |------|---------|---------------------------------------------------------------------|
@@ -15,12 +15,12 @@
 | C    | 100     | 10,000 sat                                                          |
 | D    | 1,000   | 2,100 sat                                                           |
 | E    | 2,000   | 1,000 sat                                                           |
-| F    | 28,389  | **uniform 21–500 sat** <br> total never exceeds an optional EUR cap |
+| F    | 24,029  | **uniform 21–500 sat** <br> total never exceeds an optional EUR cap |
 
 ### Security & fairness highlights
 
 - integer‑only conversions (no floats)
-- cryptographically secure RNG (`rand` 0.9+)
+- cryptographically secure RNG (`rand` 0.8+)
 - per‑bottle uniform draw that respects the global cap
 - Fisher–Yates shuffle for unpredictable ordering
 - zero `unsafe` code (`#![forbid(unsafe_code)]`)
@@ -37,7 +37,7 @@ cargo add bos-algo
 
 *(Or clone the repo and reference it via `cargo add --git <repo-url>`.)*
 
-Requires **Rust 1.77+** and the **2024 edition**.
+Requires **Rust 1.77+** and the **2021 edition**.
 
 ---
 
@@ -51,7 +51,7 @@ use bos_algo::generate_distribution;
 let btc_price_cents = 9_649_600;
 let eur_cap_cents   = 1_000_000;
 let bottles = generate_distribution(btc_price_cents, eur_cap_cents).unwrap();
-println!("generated {}", bottles.len());    // 31,500
+println!("generated {}", bottles.len());    // 27,140
 println!("first bottle {:?}", bottles[0]); // random tier
 ```
 
@@ -79,7 +79,7 @@ We provide an example CLI tool (in `src/bin/sim.rs`) that:
 
 * **Generates the distribution** once,
 * **Claims bottles in steps** (e.g., 50 bottles each step, for 5 steps),
-* **Prints a table** with Tier statistics (In Tier, Claimed, Unclaimed, Sats Claimed, etc.)
+* **Prints a table** with Tier and Batch statistics.
   To run the simulation:
 
 1. **No cap**, 5 claiming steps, each claims 50 bottles:

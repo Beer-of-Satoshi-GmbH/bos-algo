@@ -19,10 +19,7 @@ type-complexity-threshold = 250
 # Maximum number of enum variants
 enum-variant-name-threshold = 3
 
-# Maximum cyclomatic complexity
-cyclomatic-complexity-threshold = 25
-
-# Warn on TODOs
+# Warn on wildcard imports
 warn-on-all-wildcard-imports = true
 
 # Disallowed names
@@ -33,12 +30,6 @@ missing-docs-in-crate-items = true
 
 # MSRV (Minimum Supported Rust Version)
 msrv = "1.77.0"
-
-# Enforce documentation on private items
-missing-docs-in-private-items = false
-
-# Allow certain macros
-allowed-duplicate-crates = []
 
 # Standard lint categories to allow
 allow-dbg-in-tests = true
@@ -52,10 +43,7 @@ avoid-breaking-exported-api = true
 # Maximum size of futures
 future-size-threshold = 16384
 
-# Stack size threshold for large stack arrays
-large-stack-arrays-threshold = 512000
-
-# Maximum includes in a single file
+# Maximum include file size
 max-include-file-size = 1000000
 
 # Pass by value size limit
@@ -63,12 +51,6 @@ pass-by-value-size-limit = 256
 
 # Single char binding names to allow
 single-char-binding-names-threshold = 4
-
-# Struct field name threshold
-struct-excessive-bools-threshold = 3
-
-# Threshold for too many lines
-too-many-lines-threshold = 100
 
 # Upper case acronyms - set to false to require Camel Case
 upper-case-acronyms-aggressive = false

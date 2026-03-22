@@ -29,7 +29,7 @@ pub enum GenError {
     CapTooLow,
 }
 
-const TOTAL_BOTTLES: usize = 31_500;
+pub const TOTAL_BOTTLES: usize = 27_140;
 const MIN_F: u32 = 21;
 const MAX_F: u32 = 500;
 const ONE_BTC_SATS: u128 = 100_000_000;
@@ -74,7 +74,7 @@ pub fn generate_distribution(
     }
 
     let tier_f_count: u32 =
-        u32::try_from(TOTAL_BOTTLES - dist.len()).expect("≤ 31 500 fits in u32");
+        u32::try_from(TOTAL_BOTTLES - dist.len()).expect("≤ 27 140 fits in u32");
     let mut rng = thread_rng();
 
     if tier_f_count == 0 {
