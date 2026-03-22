@@ -1,18 +1,17 @@
 #![forbid(unsafe_code)]
 #![warn(clippy::all, clippy::pedantic)]
 
+use bos_algo::{generate_distribution, Bottle, Tier};
 use clap::Parser;
-use rand::{thread_rng, seq::SliceRandom};
+use rand::{seq::SliceRandom, thread_rng};
 use std::collections::HashMap;
-
-use bos_algo::{Bottle, Tier, generate_distribution};
 
 #[derive(Parser, Debug)]
 #[command(name = "BOS Extended Simulation")]
 #[command(author = "Beer of Satoshi")]
 #[command(version = "1.0")]
 #[command(
-    about = "Generate the 31 500‑bottle distribution and step‑claim bottles, \
+    about = "Generate the 27,140‑bottle distribution and step‑claim bottles, \
              tracking tier statistics."
 )]
 struct Cli {
@@ -45,7 +44,7 @@ fn main() {
             std::process::exit(1);
         });
 
-    println!("Generated distribution of {} bottles.\n", dist.len());
+    println!("Generated distribution of {} bottles.", dist.len());
 
     let mut session_dist: Vec<Bottle> = dist
         .into_iter()
